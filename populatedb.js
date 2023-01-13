@@ -66,7 +66,7 @@ function itemCreate(category, name, desc, price, number_in_stock, cb) {
 }
 
 function createCategories(cb) {
-    async.parallel([
+    async.series([
         function(callback) {
           categoryCreate('Charms', 'Charms are gorgeous, mystical, one-of-a-kind accessories with a spark of power woven into their cores. ', callback);
         },
