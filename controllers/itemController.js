@@ -2,7 +2,10 @@ const Item = require("../models/item");
 
 // Display list of all Items.
 exports.item_list = (req, res, next) => {
-  Item.find().exec(function (err, list_items) {
+  Item.find()
+    .sort({ name: 1 })
+    .populate("category")
+    .exec(function (err, list_items) {
       if (err) {
         return next(err);
       }
