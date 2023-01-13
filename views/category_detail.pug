@@ -9,12 +9,8 @@ block content
     h4 Items in this category
 
     each item in items
-      hr
-      p #[strong Name: ]
+      li
         a(href=item.url) #{item.name}
-      p #[strong Description: ] #{item.desc}
-      p #[strong Price: ] #{item.price} Geo
-      p #[strong Stock: ] #{item.number_in_stock}
 
     else
       p There are no item in this category.
