@@ -38,7 +38,33 @@ exports.category_list = (req, res, next) => {
 
 // Display detail page for a specific Category.
 exports.category_detail = (req, res, next) => {
-  res.send(`NOT IMPLEMENTED: Category detail: ${req.params.id}`);
+  async.parallel(
+    {
+      category(callback) {
+        Category.findById(req.params.id).exec(callback);
+      },
+      item(callback) {
+        Item.find({ category: req.params.id }).exec(callback);
+      },
+    },
+    (err, results) => {
+      if (err) {
+        return next(err);
+      }
+      if (results.category == null) {
+        // No results.
+        const err = new Error("Category not found");
+        err.status = 404;
+        return next(err);
+      }
+      // Successful, so render.
+      res.render("category_detail", {
+        title: results.category.name,
+        category: results.category,
+        items: results.item,
+      });
+    }
+  );
 };
 
 // Display Category create form on GET.
