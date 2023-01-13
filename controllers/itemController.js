@@ -2,7 +2,16 @@ const Item = require("../models/item");
 
 // Display list of all Items.
 exports.item_list = (req, res, next) => {
-  res.send("NOT IMPLEMENTED: Item list");
+  Item.find().exec(function (err, list_items) {
+      if (err) {
+        return next(err);
+      }
+      // Successful, so render
+      res.render("item_list", {
+        title: "Item List",
+        item_list: list_items,
+      });
+    });
 };
 
 // Display detail page for a specific Item.
