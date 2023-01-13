@@ -2,4 +2,13 @@ extends layout
 
 block content
   h1= title
-  p Welcome to #{title}
+  p Welcome to #[strong Sly's Shop]! Sly sells many wares: from charms to adventuring gear at his shop in Dirtmouth for Geo but drives a hard bargain.
+
+  if error
+    p Error getting dynamic content.
+  else
+    p The shop has the following record counts:
+
+    ul
+      li #[strong Categories: ] !{data.category_count}
+      li #[strong Items: ] !{data.item_count}
