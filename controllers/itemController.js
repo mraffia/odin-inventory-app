@@ -1,4 +1,8 @@
 const Item = require("../models/item");
+const Category = require("../models/category");
+
+const async = require("async");
+const { body, validationResult } = require("express-validator");
 
 // Display list of all Items.
 exports.item_list = (req, res, next) => {
@@ -40,13 +44,105 @@ exports.item_detail = (req, res, next) => {
 
 // Display Item create form on GET.
 exports.item_create_get = (req, res, next) => {
-  res.send("NOT IMPLEMENTED: Item create GET");
+  // Get all categories, which we can use for adding to our item.
+  async.parallel(
+    {
+      categories(callback) {
+        Category.find(callback);
+      },
+    },
+    (err, results) => {
+      if (err) {
+        return next(err);
+      }
+      res.render("item_form", {
+        title: "Create Item",
+        categories: results.categories,
+      });
+    }
+  );
 };
 
 // Handle Item create on POST.
-exports.item_create_post = (req, res, next) => {
-  res.send("NOT IMPLEMENTED: Item create POST");
-};
+exports.item_create_post = [
+  // Convert the category to an array.
+  (req, res, next) => {
+    if (!Array.isArray(req.body.category)) {
+      req.body.category =
+        typeof req.body.category === "undefined" ? [] : [req.body.category];
+    }
+    next();
+  },
+
+  // Validate and sanitize fields.
+  body("item_name", "Name must not be empty.")
+    .trim()
+    .isLength({ min: 1 })
+    .escape(),
+  body("item_desc", "Description must not be empty.")
+    .trim()
+    .isLength({ min: 1 })
+    .escape(),
+  body("price", "Price must not be below 0").escape(),
+  body("number_in_stock", "Stock must not be below 0").escape(),
+  body("category.*").escape(),
+
+  // Process request after validation and sanitization.
+  (req, res, next) => {
+    // Extract the validation errors from a request.
+    const errors = validationResult(req);
+
+    // Create a Item object with escaped and trimmed data.
+    const item = new Item({
+      name: req.body.item_name,
+      desc: req.body.item_desc,
+      price: req.body.price,
+      number_in_stock: req.body.number_in_stock,
+      category: req.body.category,
+    });
+
+    if (!errors.isEmpty()) {
+      // There are errors. Render form again with sanitized values/error messages.
+
+      // Get all categories for form.
+      async.parallel(
+        {
+          categories(callback) {
+            Category.find(callback);
+          },
+        },
+        (err, results) => {
+          if (err) {
+            return next(err);
+          }
+
+          // Mark our selected categories as checked.
+          for (const category of results.categories) {
+            if (item.category.includes(category._id)) {
+              category.checked = "true";
+            }
+          }
+          res.render("item_form", {
+            title: "Create Item",
+            categories: results.categories,
+            item,
+            errors: errors.array(),
+          });
+        }
+      );
+      return;
+    }
+
+    // Data from form is valid. Save item.
+    item.save((err) => {
+      if (err) {
+        return next(err);
+      }
+      // Successful: redirect to new item record.
+      res.redirect(item.url);
+    });
+  },
+];
 
 // Display Item delete form on GET.
 exports.item_delete_get = (req, res, next) => {
