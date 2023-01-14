@@ -44,7 +44,7 @@ exports.category_detail = (req, res, next) => {
       category(callback) {
         Category.findById(req.params.id).exec(callback);
       },
-      item(callback) {
+      category_items(callback) {
         Item.find({ category: req.params.id }).exec(callback);
       },
     },
@@ -62,7 +62,7 @@ exports.category_detail = (req, res, next) => {
       res.render("category_detail", {
         title: results.category.name,
         category: results.category,
-        items: results.item,
+        category_items: results.category_items,
       });
     }
   );

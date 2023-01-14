@@ -6,11 +6,13 @@ block content
   p #[strong Description: ] #{category.desc}
 
   div(style='margin-left:20px;margin-top:20px')
-    h4 Items in this category
+    h4 Items
 
-    each item in items
-      li
-        a(href=item.url) #{item.name}
+    dl
+      each item in category_items
+        dt
+          a(href=item.url) #{item.name}
+        dd #{item.desc}
 
-    else
-      p There are no item in this category.
+      else
+        p This category has no items.
