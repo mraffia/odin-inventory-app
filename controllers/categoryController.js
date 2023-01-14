@@ -134,12 +134,68 @@ exports.category_create_post = [
 
 // Display Category delete form on GET.
 exports.category_delete_get = (req, res, next) => {
-  res.send("NOT IMPLEMENTED: Category delete GET");
+  async.parallel(
+    {
+      category(callback) {
+        Category.findById(req.params.id).exec(callback);
+      },
+      category_items(callback) {
+        Item.find({ category: req.params.id }).exec(callback);
+      },
+    },
+    (err, results) => {
+      if (err) {
+        return next(err);
+      }
+      if (results.category == null) {
+        // No results.
+        res.redirect("/catalog/categories");
+      }
+      // Successful, so render.
+      res.render("category_delete", {
+        title: "Delete Category",
+        category: results.category,
+        category_items: results.category_items,
+      });
+    }
+  );
 };
 
 // Handle Category delete on POST.
 exports.category_delete_post = (req, res, next) => {
-  res.send("NOT IMPLEMENTED: Category delete POST");
+  async.parallel(
+    {
+      category(callback) {
+        Category.findById(req.body.categoryid).exec(callback);
+      },
+      category_items(callback) {
+        Item.find({ category: req.body.categoryid }).exec(callback);
+      },
+    },
+    (err, results) => {
+      if (err) {
+        return next(err);
+      }
+      // Success
+      if (results.category_items.length > 0) {
+        // Category has items. Render in same way as for GET route.
+        res.render("category_delete", {
+          title: "Delete Category",
+          category: results.category,
+          category_items: results.category_items,
+        });
+        return;
+      }
+      // Category has no items. Delete object and redirect to the list of categories.
+      Category.findByIdAndRemove(req.body.categoryid, (err) => {
+        if (err) {
+          return next(err);
+        }
+        // Success - go to category list
+        res.redirect("/catalog/categories");
+      });
+    }
+  );
 };
 
 // Display Category update form on GET.
