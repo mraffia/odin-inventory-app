@@ -200,10 +200,76 @@ exports.category_delete_post = (req, res, next) => {
 
 // Display Category update form on GET.
 exports.category_update_get = (req, res, next) => {
-  res.send("NOT IMPLEMENTED: Category update GET");
+  // Get category for form.
+  async.parallel(
+    {
+      category(callback) {
+        Category.find(callback);
+      },
+    },
+    (err, results) => {
+      if (err) {
+        return next(err);
+      }
+      if (results.category == null) {
+        // No results.
+        const err = new Error("Category not found");
+        err.status = 404;
+        return next(err);
+      }
+      // Success.
+      res.render("category_form", {
+        title: "Update Category",
+        category: results.category,
+      });
+    }
+  );
 };
 
 // Handle Category update on POST.
-exports.category_update_post = (req, res, next) => {
-  res.send("NOT IMPLEMENTED: Category update POST");
-};
+exports.category_update_post = [
+  // Validate and sanitize fields.
+  body("category_name", "Name must not be empty.")
+    .trim()
+    .isLength({ min: 1 })
+    .escape(),
+  body("category_desc", "Description must not be empty.")
+    .trim()
+    .isLength({ min: 1 })
+    .escape(),
+
+  // Process request after validation and sanitization.
+  (req, res, next) => {
+    // Extract the validation errors from a request.
+    const errors = validationResult(req);
+
+    // Create a Category object with escaped/trimmed data and old id.
+    const category = new Category({
+      name: req.body.category_name,
+      desc: req.body.category_desc,
+      _id: req.params.id, //This is required, or a new ID will be assigned!
+    });
+
+    if (!errors.isEmpty()) {
+      // There are errors. Render form again with sanitized values/error messages.
+
+      res.render("category_form", {
+        title: "Update Category",
+        category,
+        errors: errors.array(),
+      });
+
+      return;
+    }
+
+    // Data from form is valid. Update the record.
+    Category.findByIdAndUpdate(req.params.id, category, {}, (err, thecategory) => {
+      if (err) {
+        return next(err);
+      }
+
+      // Successful: redirect to category detail page.
+      res.redirect(thecategory.url);
+    });
+  },
+];
