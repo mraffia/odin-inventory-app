@@ -84,25 +84,25 @@ function createCategories(cb) {
 function createItems(cb) {
     async.parallel([
         function(callback) {
-          itemCreate('Gathering Swarm', 'Do you find yourself leaving a lot of Geo behind as you hurry through the caverns? This charm will make sure that any loose change finds its way back to you.', 300, 1, [categories[0]], callback)
+          itemCreate("Gathering Swarm", "Do you find yourself leaving a lot of Geo behind as you hurry through the caverns? This charm will make sure that any loose change finds its way back to you.", 300, 1, [categories[0]], callback)
         },
         function(callback) {
-          itemCreate('Stalwart Shell', 'Life in Hallownest can be tough, always taking hits and getting knocked around. This charm grants you more time to recover after taking damage. Useful if you need to escape from a tight spot.', 200, 1, [categories[0]], callback)
+          itemCreate("Stalwart Shell", "Life in Hallownest can be tough, always taking hits and getting knocked around. This charm grants you more time to recover after taking damage. Useful if you need to escape from a tight spot.", 200, 1, [categories[0]], callback)
         },
         function(callback) {
-          itemCreate('Heavy Blow', 'You enjoy smacking about foes with that nail of yours, right? With this charm equipped, you\'ll be able to send them flying further with every hit!', 350, 1, [categories[0]], callback)
+          itemCreate("Heavy Blow", "You enjoy smacking about foes with that nail of yours, right? With this charm equipped, you'll be able to send them flying further with every hit!", 350, 1, [categories[0]], callback)
         },
         function(callback) {
-          itemCreate('Rancid Egg', 'I found this under the counter. Some creature must have laid it here while I was stuck down in the ruins. I suppose you could buy it? I won\'t miss its sour odour.', 60, 6, [categories[1]], callback)
+          itemCreate("Rancid Egg", "I found this under the counter. Some creature must have laid it here while I was stuck down in the ruins. I suppose you could buy it? I won't miss its sour odour.", 60, 6, [categories[1]], callback)
         },
         function(callback) {
-          itemCreate('Lumafly Lantern', 'What\'s more important? A light to guide your way, or a friend who\'ll stay by your side? Why not both? Take this bright little fellow as your companion and he\'ll light your way through the thickest darkness.', 1800, 1, [categories[1]], callback)
+          itemCreate("Lumafly Lantern", "What's more important? A light to guide your way, or a friend who'll stay by your side? Why not both? Take this bright little fellow as your companion and he'll light your way through the thickest darkness.", 1800, 1, [categories[1]], callback)
         },
         function(callback) {
-          itemCreate('Elegant Key', 'An explorer found this fancy key floating in the waterways of the city far below us. I\'ve not cleaned it.', 800, 1, [categories[1], categories[2]], callback)
+          itemCreate("Elegant Key", "An explorer found this fancy key floating in the waterways of the city far below us. I've not cleaned it.", 800, 1, [categories[1], categories[2]], callback)
         },
         function(callback) {
-          itemCreate('Simple Key', 'Simply, a simple key. It will fit a variety of locks, which is useful if you like to poke around in places you don\'t belong.', 950, 3, [categories[1], categories[2]], callback)
+          itemCreate("Simple Key", "Simply, a simple key. It will fit a variety of locks, which is useful if you like to poke around in places you don't belong.", 950, 3, [categories[1], categories[2]], callback)
         }
         ],
         // Optional callback
