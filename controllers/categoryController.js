@@ -7,18 +7,23 @@ const { body, validationResult } = require("express-validator");
 exports.index = (req, res, next) => {
   async.parallel(
     {
-      category_count(callback) {
-        Category.countDocuments({}, callback); // Pass an empty object as match condition to find all documents of this collection
+      categories(callback) {
+        Category.find({}, "name")
+          .sort({ name: 1 })
+          .exec(callback);
       },
-      item_count(callback) {
-        Item.countDocuments({}, callback);
+      items(callback) {
+        Item.find()
+          .sort({ name: 1 })
+          .exec(callback);
       },
     },
     (err, results) => {
       res.render("index", {
         title: "Sly's Shop (Inventory App)",
         error: err,
-        data: results,
+        categories: results.categories,
+        items: results.items,
       });
     }
   );
