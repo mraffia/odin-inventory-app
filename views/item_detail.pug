@@ -6,7 +6,6 @@ block content
   p #{item.desc}
   p #[strong Price: ] #{item.price} Geo
   p #[strong Stock: ] #{item.number_in_stock}
-  hr
   p #[strong Category: ]
     each val, index in item.category
       a(href=val.url) #{val.name}

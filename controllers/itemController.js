@@ -219,7 +219,7 @@ exports.item_update_get = (req, res, next) => {
         }
       }
       res.render("item_form", {
-        title: "Update Item",
+        title: `Update Item: ${results.item.name}`,
         categories: results.categories,
         item: results.item,
       });
@@ -288,7 +288,7 @@ exports.item_update_post = [
             }
           }
           res.render("item_form", {
-            title: "Update Item",
+            title: `Update Item: ${item.name}`,
             categories: results.categories,
             item,
             errors: errors.array(),

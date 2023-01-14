@@ -209,7 +209,7 @@ exports.category_update_get = (req, res, next) => {
   async.parallel(
     {
       category(callback) {
-        Category.find(callback);
+        Category.findById(req.params.id).exec(callback);
       },
     },
     (err, results) => {
@@ -224,7 +224,7 @@ exports.category_update_get = (req, res, next) => {
       }
       // Success.
       res.render("category_form", {
-        title: "Update Category",
+        title: `Update Category: ${results.category.name}`,
         category: results.category,
       });
     }
@@ -259,7 +259,7 @@ exports.category_update_post = [
       // There are errors. Render form again with sanitized values/error messages.
 
       res.render("category_form", {
-        title: "Update Category",
+        title: `Update Category: ${category.name}`,
         category,
         errors: errors.array(),
       });
