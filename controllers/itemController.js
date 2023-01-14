@@ -4,7 +4,6 @@ const Item = require("../models/item");
 exports.item_list = (req, res, next) => {
   Item.find()
     .sort({ name: 1 })
-    .populate("category")
     .exec(function (err, list_items) {
       if (err) {
         return next(err);
